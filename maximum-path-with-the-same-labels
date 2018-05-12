@@ -1,0 +1,71 @@
+//url :-https://www.codela.io/challenges/5a5cb027b1c6d9b569a97a93/maximum-path-with-the-same-labels
+	
+   public static int maxVal = 0;
+	 
+	 static int postOrder( int[] labels, int[][] edges,int index ){
+	  
+	  boolean leftExists = (edges[index][0] != -1) ? true : false;
+	  boolean rightExists = (edges[index][1] != -1) ? true : false;
+	  
+	  if( !( leftExists || rightExists ) ){//leaf node
+	    return 0;
+	  }
+	  
+	  int left = 0;int right = 0;//current path length from left and right subtree
+	  if( leftExists ){//left
+	    left = postOrder( labels, edges, edges[index][0] );
+	  }
+	
+	  if( rightExists ){//right
+	    right = postOrder( labels, edges, edges[index][1] );
+	  }
+	  
+	  int case1 = 0, case2 = 0, case3 = 0;
+	  if( leftExists && rightExists && ( labels[ edges[index][0] ] == labels[index] ) && ( labels[ edges[index][1] ] == labels[index] ) ){
+	    case1 = left + right + 2;
+	  }
+	   if( leftExists &&  ( labels[ edges[index][0] ] == labels[index] ) ){
+	    case2 = left + 1;
+	  }
+	    if( rightExists &&  ( labels[ edges[index][1] ] == labels[index] ) ){
+	    case3 = right + 1;
+	  }
+	  maxVal = Math.max( Math.max( case1, case2 ), Math.max( maxVal, case3 ) );
+	  
+	  
+	  
+	  return Math.max( case2, case3 );  
+	  
+	}
+	
+	static int solution(int[] labels, int[] edges) {
+	    
+	     int i;
+	     int[][] ee = new int[labels.length][2];
+	  
+	     for( i = 0; i<labels.length; i++ ){
+	       ee[i][0] = -1;
+	       ee[i][1] = -1;
+	     }
+	   
+	     for( i=0; i<edges.length; i += 2 ){
+	       
+	       int nl = edges[i] - 1;//node
+	       int nr = edges[ i + 1 ] - 1;
+	          
+	         if( ee[ nl ][0] == -1 ){
+	           ee[ nl ][0] = nr;
+	         }
+	         else {
+	           ee[ nl ][1] = nr;
+	         }
+	       
+	     }
+	    
+	     postOrder( labels, ee, 0 );
+	    
+	     
+	     return maxVal;
+	}
+	
+
